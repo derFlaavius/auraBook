@@ -7,6 +7,7 @@ import os
 import sys
 import klassen
 import sql_befehle
+import check
 
 
 def clearwdw():
@@ -85,12 +86,44 @@ def person_hinzufg():
     ywert += gui_werte.abst_buty
 
 def auswaehlen(lib_personen):
+    def speichern():
+        eintrag = klassen.Eintrag()
+        if cases == 1: # Keine Auswahl
+            pkt = tf_punkte.get()
+            komm = tf_kommentar.get()
+            if check.digit(pkt, "Aura") == True and check.char50(komm, "Kommentar") == True:
+                eintrag.pkt = pkt
+                eintrag.kommentar = komm
+            else:
+                return
+        elif cases == 2: # LOST
+            eintrag.pkt = -1000
+            eintrag.kommentar = "LOST"
+        elif cases == 3: # Labert schmarrn
+            eintrag.pkt = -100
+            eintrag.kommentar = "Gibt Bullshit von sich"
+        elif cases == 4: # O-Saft getrunken
+            eintrag.pkt = 50
+            eintrag.kommentar = "O-Saft "
+        else:
+            print("Fehler")
+
+        rm = sql_befehle.person_bearbeiten(eintrag)
+        if rm == 0:
+            messagebox.showinfo("Erfolg", "Speicherung erfolgreich")
+        elif rm == 1:
+            messagebox.showerror("Fehler bei der Datenspeicherung")
+
+    global person
     # Abfrage Personendaten
     #lib_personen.get()
-    index = lib_personen.curselection()
-    print(index)
+    eintrag = lib_personen.curselection()
+    index = eintrag[0]
+    eintrag = pliste[index]
+    pid = eintrag[0]
+    print(pid)
     global person
-    person, rw = sql_befehle.person_laden(index)
+    person, rw = sql_befehle.person_laden(pid)
     if rw == 1:
         messagebox.showwarning("Eingabe fehlt", "Bitte wähle zuvor einen Namen aus")
         return
@@ -100,22 +133,22 @@ def auswaehlen(lib_personen):
     
     # Elemente
     # Labels
-    lb_pinfo = tk.Label(root, text=person.rang, fg=person.rangclr)
+    lb_pinfo = tk.Label(root, text=f"Rang: {person.rang}", fg=person.rangclr)
     lb_alternativ = tk.Label(root, text="Manuelle Eingabe")
     lb_punkte = tk.Label(root, text="Aura:")
     lb_kommentar= tk.Label(root, text="Kommentar:")
 
     # Buttons
     bnwidth = gui_werte.bnwidth
-    bn_bestaetigen = ttk.Button(root, text="Bestätigen", width=bnwidth)
+    bn_bestaetigen = ttk.Button(root, text="Bestätigen", width=bnwidth, command=lambda:speichern())
     bn_abbruch = ttk.Button(root, text="Abbruch", width=bnwidth, command=lambda:mainscreen(pliste))
 
     # Radioboxen
-    cases = tk.IntVar(value=0)
-    rb_case1 = ttk.Radiobutton(root, text="Case1", variable=cases, value=1)
-    rb_case2 = ttk.Radiobutton(root, text="Case2", variable=cases, value=2)
-    rb_case3 = ttk.Radiobutton(root, text="Case3", variable=cases, value=3)
-    rb_case4 = ttk.Radiobutton(root, text="Case4", variable=cases, value=4)
+    cases = tk.IntVar(value=1)
+    rb_case1 = ttk.Radiobutton(root, text="Keine Auswahl", variable=cases, value=1)
+    rb_case2 = ttk.Radiobutton(root, text="LOST", variable=cases, value=2)
+    rb_case3 = ttk.Radiobutton(root, text="Labert schmarrn", variable=cases, value=3)
+    rb_case4 = ttk.Radiobutton(root, text="O-Saft Power", variable=cases, value=4)
 
     # Entry
     tf_punkte = ttk.Entry(root, width=bnwidth + 1)
@@ -156,7 +189,7 @@ def mainscreen(pliste):
                 listbox_widget.insert(tk.END, item)
         listbox_widget.place(x=xwert, y=ywert)
         return listbox_widget
-    
+
     clearwdw()
     pic_logo4.pack()
     bnwidth = gui_werte.bnwidth
@@ -195,8 +228,10 @@ lnk_logo4 = os.path.join(os.path.dirname(__file__), "images", "logo4.png")
 # Objekte und Listen vorladen
 global pliste
 gui_werte = klassen.Guiwerte()
-pliste = sql_befehle.personen_laden()
-
+pliste, rm_pliste = sql_befehle.personen_laden()
+if rm_pliste == 1:
+    messagebox.showerror("Datenbank", "Es gab ein Problem bei der Datenübertragung")
+    sys.exit()
 # Erzeugung des Fensters
 root = tk.Tk()
 root.geometry("600x600")
