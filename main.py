@@ -8,11 +8,20 @@ import sys
 import klassen
 import sql_befehle
 import check
+import key
 
 
 def clearwdw():
     for widget in root.winfo_children():
         widget.place_forget()
+
+def startprogramm(keystr):
+    result = key.check(keystr)
+    if result:
+        mainscreen()
+    else:
+        messagebox.showinfo("Ungültig", "Key ist ungültig!")
+        sys.exit()
 
 def verlauf(person):
     def zurueck(tabelle):
@@ -71,7 +80,7 @@ def person_hinzufg():
     pic_logo4.pack()
 
     # Label
-    lb_info = tk.Label(root, text="Bitte gebe erst einen neuen Namen ein, wenn du dir\nabsolut sicher bist, dass dieser nicht existiert!", fg="yellow")
+    lb_info = tk.Label(root, text="Bitte gebe erst einen neuen Namen ein, wenn du dir\nabsolut sicher bist, dass dieser nicht existiert!\n\nEine Namensänderung erfolgt ausschließlich administrativ!", fg="yellow")
     lb_eingabe = tk.Label(root, text="Wie lautet der Name?")
 
     # Button
@@ -86,7 +95,7 @@ def person_hinzufg():
     ywert = 170
 
     lb_info.place(x=xwert, y=ywert)
-    ywert += gui_werte.abst_lby + gui_werte.abst_lby
+    ywert += (gui_werte.abst_lby * 4)
     lb_eingabe.place(x=xwert, y=ywert)
     ywert += gui_werte.abst_lby
     tf_name.place(x=xwert, y=ywert)
@@ -162,7 +171,7 @@ def auswaehlen(lib_personen):
 
     # Elemente
     # Labels
-    lb_pinfo = tk.Label(root, text=f"Rang: {person.rang}", fg=person.rangclr)
+    lb_pinfo = tk.Label(root, text=f"Rang: {person.rang}\nAura: {person.aura}", fg=person.rangclr)
     lb_alternativ = tk.Label(root, text="Manuelle Eingabe")
     lb_punkte = tk.Label(root, text="Aura:")
     lb_kommentar= tk.Label(root, text="Kommentar:")
@@ -187,7 +196,7 @@ def auswaehlen(lib_personen):
     xwert = 350
     ywert = 170
     lb_pinfo.place(x=xwert, y=ywert)
-    ywert += gui_werte.abst_lby
+    ywert += gui_werte.abst_lby + 20
     rb_case1.place(x=xwert, y=ywert)
     ywert += gui_werte.abst_rby
     rb_case2.place(x=xwert, y=ywert)
@@ -197,7 +206,7 @@ def auswaehlen(lib_personen):
     rb_case4.place(x=xwert, y=ywert)
     ywert += gui_werte.abst_rby + 10
     lb_alternativ.place(x=xwert, y=ywert)
-    ywert += gui_werte.abst_lby
+    ywert += gui_werte.abst_lby - 5
     lb_punkte.place(x=xwert, y=ywert)
     ywert += gui_werte.abst_lby
     tf_punkte.place(x=xwert, y=ywert)
@@ -272,8 +281,8 @@ person = klassen.Person()
 
 # Erzeugung des Fensters
 root = tk.Tk()
-root.geometry("600x600")
-root.title("auraBook v1.0.0 - Lass es raus!")
+root.geometry("600x650")
+root.title("auraBook v1.1.0 - Lass es raus!")
 
 # Einstellung GUI
 root.tk.call("source", lnk_azure)
@@ -285,6 +294,16 @@ logo4 = logo4.resize((120, 140))
 logo4 = ImageTk.PhotoImage(logo4)
 pic_logo4 = tk.Label(root, image=logo4)
 
-mainscreen()
+
+# Abfrage Key
+tf_key = ttk.Entry(root)
+bn_key = ttk.Button(root, text="Bestätigen", command=lambda:startprogramm(tf_key.get()))
+
+pic_logo4.pack()
+tk.Label(root, text="Key eingeben:", fg="yellow").place(x=90, y=200)
+tf_key.place(x=90, y=230)
+bn_key.place(x=90, y=270)
+
+#mainscreen()
 
 root.mainloop()

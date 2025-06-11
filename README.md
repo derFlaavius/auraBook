@@ -1,4 +1,4 @@
-# auraBook v1.0.0 - Lass es raus!
+# auraBook v1.1.0 - Lass es raus!
 
 > Ein komplett unnötiges, aber verdammt unterhaltsames Aura-Bewertungs- und Blamier-Tool.  
 > Weil nichts deine Mitmenschen besser motiviert als öffentlicher Punktabzug für "LOST"-Verhalten.
@@ -45,3 +45,8 @@ Dieses Programm ist ein Spaßprojekt und sollte _nicht_ für ernsthafte Personal
 ---
 
 **auraBook** – _Weil jede*r weiß, wer in der Gruppe wirklich lost ist._
+
+v1.1.0 Neuerungen:
+- Key eingefügt aufgrund Anbindung an eine öffentliche Datenbank (Datenschutz)
+- Anbindung an "einer richtigen" Datenbank
+- Aurapunkte werden nun unter dem Rang angezeigt

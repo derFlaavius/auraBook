@@ -11,7 +11,6 @@ def personen_laden():
         cursor.execute("SELECT id, name FROM person ORDER BY name ASC")
         pliste = cursor.fetchall()
         conn.close()
-        print(pliste)
         return pliste, 0
     except Exception as e:
         print(f"Fehler beim Laden der Personen: {e}")
