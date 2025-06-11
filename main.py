@@ -18,7 +18,7 @@ def verlauf(person):
     def zurueck(tabelle):
         tabelle.destroy()
         bn_zurueck.destroy()
-        mainscreen(pliste)
+        mainscreen()
     
     def tabelle_erzeugen(daten):
         spalten = ("Datum", "Aura", "Grund")
@@ -48,6 +48,9 @@ def verlauf(person):
 def person_hinzufg():
     def check_eingabe():
         eingabe = tf_name.get()
+        rm = check.space(eingabe, "Name")
+        if rm == False:
+            return
         if eingabe == "":
             messagebox.showwarning("Fehlende Eingabe", "Bitte gib einen Namen ein.")
             return
@@ -59,18 +62,21 @@ def person_hinzufg():
             messagebox.showerror("DB Fehler", "Es gab ein Problem mit der Datenbank")
             return
         messagebox.showinfo("Speicherung erfolgreich", "Der Name wurde erfolgreich gespeichert.")
-        pliste = sql_befehle.personen_laden() # Personen neu laden
-        mainscreen(pliste)
+        pliste, rm_pliste = sql_befehle.personen_laden() # Personen neu laden
+        if rm_pliste == 1:
+            messagebox.showerror("Fatal Error", "Fataler Fehler")
+        mainscreen()
         
     clearwdw()
     pic_logo4.pack()
 
     # Label
+    lb_info = tk.Label(root, text="Bitte gebe erst einen neuen Namen ein, wenn du dir\nabsolut sicher bist, dass dieser nicht existiert!", fg="yellow")
     lb_eingabe = tk.Label(root, text="Wie lautet der Name?")
 
     # Button
     bn_bestaetigen = ttk.Button(root, text="Bestätigen", command=check_eingabe, width=gui_werte.bnwidth)
-    bn_abbrechen = ttk.Button(root, text="Abbrechen", width=gui_werte.bnwidth, command=lambda:mainscreen(pliste))
+    bn_abbrechen = ttk.Button(root, text="Abbrechen", width=gui_werte.bnwidth, command=lambda:mainscreen())
 
     # Entry
     tf_name = ttk.Entry(root, width=gui_werte.bnwidth + 1)
@@ -79,6 +85,8 @@ def person_hinzufg():
     xwert = 40
     ywert = 170
 
+    lb_info.place(x=xwert, y=ywert)
+    ywert += gui_werte.abst_lby + gui_werte.abst_lby
     lb_eingabe.place(x=xwert, y=ywert)
     ywert += gui_werte.abst_lby
     tf_name.place(x=xwert, y=ywert)
@@ -95,11 +103,20 @@ def auswaehlen(lib_personen):
         if cases1 == 1: # Keine Auswahl
             pkt = tf_punkte.get()
             komm = tf_kommentar.get()
-            if check.digit(pkt, "Aura") == True and check.char50(komm, "Kommentar") == True:
-                eintrag.pkt = pkt
-                eintrag.kommentar = komm
+            if pkt != 0 and pkt != "" and komm != "":
+                if check.digit(pkt, "Aura") == True and check.char50(komm, "Kommentar") == True:
+                    if int(pkt) <= 5000 and int(pkt) >= -5000:
+                        eintrag.pkt = pkt
+                        eintrag.kommentar = komm
+                    else:
+                        messagebox.showwarning("Fehler Eingabe", "Eingabewert > 5000 oder < -5000")
+                        return
+                else:
+                    return
             else:
+                messagebox.showwarning("Fehlende Eingabe", "Bitte gib etwas in das Feld Aura und Kommentar ein.")
                 return
+
         elif cases1 == 2: # LOST
             eintrag.pkt = -1000
             eintrag.kommentar = "LOST"
@@ -113,9 +130,10 @@ def auswaehlen(lib_personen):
             print("Fehler")
             messagebox.showerror("Fatal Error", "Fataler Fehler aufgetreten.")
 
-        rm = sql_befehle.person_bearbeiten(eintrag)
+        rm = sql_befehle.person_bearbeiten(eintrag, person)
         if rm == 0:
             messagebox.showinfo("Erfolg", "Speicherung erfolgreich")
+            mainscreen()
         elif rm == 1:
             messagebox.showerror("Fehler bei der Datenspeicherung")
 
@@ -152,7 +170,7 @@ def auswaehlen(lib_personen):
     # Buttons
     bnwidth = gui_werte.bnwidth
     bn_bestaetigen = ttk.Button(root, text="Bestätigen", width=bnwidth, command=lambda:speichern())
-    bn_abbruch = ttk.Button(root, text="Abbruch", width=bnwidth, command=lambda:mainscreen(pliste))
+    bn_abbruch = ttk.Button(root, text="Abbruch", width=bnwidth, command=lambda:mainscreen())
 
     # Radioboxen
     cases = tk.IntVar(value=1)
@@ -192,7 +210,7 @@ def auswaehlen(lib_personen):
     ywert += gui_werte.abst_buty
     bn_abbruch.place(x=xwert, y=ywert)
 
-def mainscreen(pliste):
+def mainscreen():
     def listbox(liste, xwert, ywert):
         listbox_widget = tk.Listbox(root, height=6, width=24, activestyle='none')
         if liste != []:
@@ -201,8 +219,13 @@ def mainscreen(pliste):
         listbox_widget.place(x=xwert, y=ywert)
         return listbox_widget
 
-    global bn_auswaehlen, bn_verlauf # Da Buttons in Funktion auswaehlen() deaktiviert / aktiviert werden, wenn auswählen betätigt wurde.
+    global bn_auswaehlen, bn_verlauf, pliste # Da Buttons in Funktion auswaehlen() deaktiviert / aktiviert werden, wenn auswählen betätigt wurde.
     clearwdw()
+    pliste, rm_pliste = sql_befehle.personen_laden()
+    if rm_pliste == 1:
+        messagebox.showerror("Datenbank", "Es gab ein Problem bei der Datenübertragung")
+        sys.exit()
+
     pic_logo4.pack()
     bnwidth = gui_werte.bnwidth
 
@@ -238,14 +261,14 @@ lnk_azure = os.path.join(os.path.dirname(__file__), "themes", "azure", "azure.tc
 lnk_logo4 = os.path.join(os.path.dirname(__file__), "images", "logo4.png")
 
 # Objekte und Listen vorladen
-global pliste, person
+global person
 gui_werte = klassen.Guiwerte()
-pliste, rm_pliste = sql_befehle.personen_laden()
+#pliste, rm_pliste = sql_befehle.personen_laden()
 person = klassen.Person()
 
-if rm_pliste == 1:
-    messagebox.showerror("Datenbank", "Es gab ein Problem bei der Datenübertragung")
-    sys.exit()
+# if rm_pliste == 1:
+#     messagebox.showerror("Datenbank", "Es gab ein Problem bei der Datenübertragung")
+#     sys.exit()
 
 # Erzeugung des Fensters
 root = tk.Tk()
@@ -262,6 +285,6 @@ logo4 = logo4.resize((120, 140))
 logo4 = ImageTk.PhotoImage(logo4)
 pic_logo4 = tk.Label(root, image=logo4)
 
-mainscreen(pliste)
+mainscreen()
 
 root.mainloop()

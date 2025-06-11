@@ -2,3 +2,4 @@
 __pycache__
 .vscode
 #doku
+sql_connector.py
