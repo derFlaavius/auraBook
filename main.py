@@ -33,6 +33,9 @@ def verlauf(person):
         tabelle.pack(expand=False, fill="both")
         return tabelle
 
+    if person.name == None:
+        messagebox.showwarning("Fehlende Eingabe", "Bitte wähle einen Namen aus und bestätige mit (Auswählen)")
+        return
     clearwdw()
     # Tabelle
     tabelle = tabelle_erzeugen(person.ereignisse)   
@@ -88,7 +91,8 @@ def person_hinzufg():
 def auswaehlen(lib_personen):
     def speichern():
         eintrag = klassen.Eintrag()
-        if cases == 1: # Keine Auswahl
+        cases1 = cases.get()
+        if cases1 == 1: # Keine Auswahl
             pkt = tf_punkte.get()
             komm = tf_kommentar.get()
             if check.digit(pkt, "Aura") == True and check.char50(komm, "Kommentar") == True:
@@ -96,17 +100,18 @@ def auswaehlen(lib_personen):
                 eintrag.kommentar = komm
             else:
                 return
-        elif cases == 2: # LOST
+        elif cases1 == 2: # LOST
             eintrag.pkt = -1000
             eintrag.kommentar = "LOST"
-        elif cases == 3: # Labert schmarrn
+        elif cases1 == 3: # Labert schmarrn
             eintrag.pkt = -100
             eintrag.kommentar = "Gibt Bullshit von sich"
-        elif cases == 4: # O-Saft getrunken
+        elif cases1 == 4: # O-Saft getrunken
             eintrag.pkt = 50
             eintrag.kommentar = "O-Saft "
         else:
             print("Fehler")
+            messagebox.showerror("Fatal Error", "Fataler Fehler aufgetreten.")
 
         rm = sql_befehle.person_bearbeiten(eintrag)
         if rm == 0:
@@ -117,12 +122,15 @@ def auswaehlen(lib_personen):
     global person
     # Abfrage Personendaten
     #lib_personen.get()
-    eintrag = lib_personen.curselection()
-    index = eintrag[0]
-    eintrag = pliste[index]
-    pid = eintrag[0]
+    eintrg = lib_personen.curselection()
+    if eintrg == ():
+        messagebox.showwarning("Fehlende Angabe", "Bitte wähle einen Namen aus")
+        return
+    index = eintrg[0]
+    eintrg = pliste[index]
+    pid = eintrg[0]
     print(pid)
-    global person
+    #global person
     person, rw = sql_befehle.person_laden(pid)
     if rw == 1:
         messagebox.showwarning("Eingabe fehlt", "Bitte wähle zuvor einen Namen aus")
@@ -131,6 +139,9 @@ def auswaehlen(lib_personen):
         messagebox.showerror("Datenbank Fehler", "Es gab ein Problem mit der Datenverarbeitung")
         return
     
+    bn_auswaehlen.config(state="disabled")
+    bn_verlauf.config(state="enabled")
+
     # Elemente
     # Labels
     lb_pinfo = tk.Label(root, text=f"Rang: {person.rang}", fg=person.rangclr)
@@ -190,6 +201,7 @@ def mainscreen(pliste):
         listbox_widget.place(x=xwert, y=ywert)
         return listbox_widget
 
+    global bn_auswaehlen, bn_verlauf # Da Buttons in Funktion auswaehlen() deaktiviert / aktiviert werden, wenn auswählen betätigt wurde.
     clearwdw()
     pic_logo4.pack()
     bnwidth = gui_werte.bnwidth
@@ -201,7 +213,7 @@ def mainscreen(pliste):
     # Buttons
     bn_auswaehlen = ttk.Button(root, text="Auswählen", width=bnwidth, command=lambda:auswaehlen(lib_personen))
     bn_personhnzfg = ttk.Button(root, text="Person hinzufügen", width=bnwidth, command=person_hinzufg)
-    bn_verlauf = ttk.Button(root, text="Verlauf einsehen", width=bnwidth, command=lambda:verlauf(person))
+    bn_verlauf = ttk.Button(root, text="Verlauf einsehen", width=bnwidth, command=lambda:verlauf(person), state="disabled")
     bn_beenden = ttk.Button(root, text="Beenden", width=bnwidth, command=sys.exit)
 
     # Platzieren
@@ -226,12 +238,15 @@ lnk_azure = os.path.join(os.path.dirname(__file__), "themes", "azure", "azure.tc
 lnk_logo4 = os.path.join(os.path.dirname(__file__), "images", "logo4.png")
 
 # Objekte und Listen vorladen
-global pliste
+global pliste, person
 gui_werte = klassen.Guiwerte()
 pliste, rm_pliste = sql_befehle.personen_laden()
+person = klassen.Person()
+
 if rm_pliste == 1:
     messagebox.showerror("Datenbank", "Es gab ein Problem bei der Datenübertragung")
     sys.exit()
+
 # Erzeugung des Fensters
 root = tk.Tk()
 root.geometry("600x600")

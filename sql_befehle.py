@@ -14,7 +14,7 @@ def person_laden(id):
         pdaten.rang_festlegen()
         pdaten.ereignisse = [[2025-12-12, -50, "In GTA verloren"], [2025-12-13, -30, "Dummer Spruch"]] # Tag des ereignisses, Aurapunkte add/diff, Kommentar
         return pdaten
-
+    
     pdaten = klassen.Person()
     pdaten = test()
     return pdaten, 0 # 0=i.o.
@@ -25,7 +25,6 @@ def person_anlegen(name):
     return 1 # Fehler: Name vorhanden
     return 2 # Fehler: Sonstige Fehler
 
-def person_bearbeiten():
-    print("")
+def person_bearbeiten(eintrag):
     return 0 # i.o.
     return 1 # Fehler
