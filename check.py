@@ -4,12 +4,10 @@ def digit(wert, name): # Prüfung, ob Intager eingehalten wurde
     i = 0
     for c in wert:
         i += 1
-        print(i)
         if i != 1 or (c != "-"):
             if c.isdigit() == False:
                 messagebox.showwarning("Ungültige Eingabe", f"Bitte gib in dem Feld {name} nur Zahlen ein!")
                 return False
-    print("Hallosadapsdfgvakjosdfoags")
     return True
 
 def char50(wert, name): # Begrenzung auf 50 Zeichen

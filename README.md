@@ -26,11 +26,11 @@ oder eben ganz tief fallen in die dunklen Tiefen der „Hopfen und Malz ist verl
 
 ## 🖼 GUI-Impression (wenn du Augen hast)
 
-Eine 600x600px Tkinter-GUI mit knuffigem Logo, hässlichen Buttons und Radiobuttons, die dich in nostalgische Windows-XP-Zeiten zurückbeamen. Dunkles Theme, weil wir cool sind.
+Eine 600x650px Tkinter-GUI mit knuffigem Logo, hässlichen Buttons und Radiobuttons, die dich in nostalgische Windows-XP-Zeiten zurückbeamen. Dunkles Theme, weil wir cool sind.
 
 ## 🧙‍♂️ Rollen & Ränge
 
-Aura bestimmt den **Rang** deiner Person:
+Aura bestimmt den **Rang** einer Person. Wie oberflächlich.
 
 
 ## 🧻 Disclaimer
@@ -40,13 +40,18 @@ Dieses Programm ist ein Spaßprojekt und sollte _nicht_ für ernsthafte Personal
 ## 🧠 Idee, Code, Chaos von
 
 **Marc** – Informatiker, Sadist, Erschaffer der Punkt-Hölle.  
-**Luna (aka ChatGPT)** – KI-Sklavin, die diesen Mist in eine readme verwandelt hat.
+**Luna (aka ChatGPT)** – KI-Sklavin, die diesen Mist in eine README verwandelt hat.
+
+
+## 📬 Changelog
+
+v1.1.0 Neuerungen:
+- Anbindung an "einer richtigen" Datenbank
+- Key eingefügt aufgrund Anbindung an einer öffentlichen Datenbank (Datenschutz). Key ausschließlich persönlich erhältlich
+- Aurapunkte werden nun unter dem Rang angezeigt
+- Verbesserungen an der GUI bei der Verlaufsanzeige
+- Sonstige GUI optimierungen
 
 ---
 
-**auraBook** – _Weil jede*r weiß, wer in der Gruppe wirklich lost ist._
-
-v1.1.0 Neuerungen:
-- Key eingefügt aufgrund Anbindung an eine öffentliche Datenbank (Datenschutz)
-- Anbindung an "einer richtigen" Datenbank
-- Aurapunkte werden nun unter dem Rang angezeigt
+**auraBook** – _Weil jeder weiß, wer in der Gruppe wirklich lost ist._

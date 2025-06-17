@@ -47,10 +47,12 @@ def verlauf(person):
         return
     clearwdw()
     # Tabelle
+    tk.Label(root, text=" ").pack()
     tabelle = tabelle_erzeugen(person.ereignisse)   
 
     # Button
     bn_zurueck = ttk.Button(root, text="Zurück", width=gui_werte.abst_buty, command=lambda:zurueck(tabelle))
+    tk.Label(root, text=" ").pack()
     bn_zurueck.pack()
 
 
@@ -123,7 +125,7 @@ def auswaehlen(lib_personen):
                 else:
                     return
             else:
-                messagebox.showwarning("Fehlende Eingabe", "Bitte gib etwas in das Feld Aura und Kommentar ein.")
+                messagebox.showwarning("Fehlende Eingabe", "Bitte gib etwas in die Felder Aura und Kommentar ein.")
                 return
 
         elif cases1 == 2: # LOST
@@ -183,10 +185,10 @@ def auswaehlen(lib_personen):
 
     # Radioboxen
     cases = tk.IntVar(value=1)
-    rb_case1 = ttk.Radiobutton(root, text="Keine Auswahl", variable=cases, value=1)
-    rb_case2 = ttk.Radiobutton(root, text="LOST", variable=cases, value=2)
-    rb_case3 = ttk.Radiobutton(root, text="Labert schmarrn", variable=cases, value=3)
-    rb_case4 = ttk.Radiobutton(root, text="O-Saft Power", variable=cases, value=4)
+    rb_case1 = ttk.Radiobutton(root, text="Manuelle Eingabe (unten)", variable=cases, value=1)
+    rb_case2 = ttk.Radiobutton(root, text="LOST | -1000", variable=cases, value=2)
+    rb_case3 = ttk.Radiobutton(root, text="Labert Schmarrn | -100", variable=cases, value=3)
+    rb_case4 = ttk.Radiobutton(root, text="O-Saft Power | +50", variable=cases, value=4)
 
     # Entry
     tf_punkte = ttk.Entry(root, width=bnwidth + 1)
@@ -291,19 +293,19 @@ root.tk.call("set_theme", "dark")
 # Implementierung der Grafiken
 logo4 = Image.open(lnk_logo4)
 logo4 = logo4.resize((120, 140))
-logo4 = ImageTk.PhotoImage(logo4)
-pic_logo4 = tk.Label(root, image=logo4)
+logo41 = ImageTk.PhotoImage(logo4)
+pic_logo4 = tk.Label(root, image=logo41)
 
 
 # Abfrage Key
 tf_key = ttk.Entry(root)
+tf_key.bind('<Return>', lambda event: startprogramm(tf_key.get()))
+
 bn_key = ttk.Button(root, text="Bestätigen", command=lambda:startprogramm(tf_key.get()))
 
 pic_logo4.pack()
 tk.Label(root, text="Key eingeben:", fg="yellow").place(x=90, y=200)
 tf_key.place(x=90, y=230)
 bn_key.place(x=90, y=270)
-
-#mainscreen()
 
 root.mainloop()
