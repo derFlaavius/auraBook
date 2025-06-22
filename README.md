@@ -1,4 +1,4 @@
-# auraBook v1.1.0 - Lass es raus!
+# auraBook v1.1.1 - Lass es raus!
 
 > Ein komplett unnötiges, aber verdammt unterhaltsames Aura-Bewertungs- und Blamier-Tool.  
 > Weil nichts deine Mitmenschen besser motiviert als öffentlicher Punktabzug für "LOST"-Verhalten.
@@ -52,6 +52,9 @@ v1.1.0 Neuerungen:
 - Verbesserungen an der GUI bei der Verlaufsanzeige
 - Sonstige GUI optimierungen
 
+v1.1.1 Neuerungen:
+- Bug fix: Tabelle in Verlauf rutscht nun nicht weiter runter
+- GUI Verbesserungen der Tabelle in Verlauf
 ---
 
 **auraBook** – _Weil jeder weiß, wer in der Gruppe wirklich lost ist._

@@ -14,6 +14,7 @@ import key
 def clearwdw():
     for widget in root.winfo_children():
         widget.place_forget()
+        widget.pack_forget()
 
 def startprogramm(keystr):
     result = key.check(keystr)
@@ -33,19 +34,21 @@ def verlauf(person):
         spalten = ("Datum", "Aura", "Grund")
         tabelle = ttk.Treeview(columns=spalten, show="headings")
         for spalte in spalten:
-            tabelle.heading(spalte, text=spalte)
-            tabelle.column(spalte, anchor="center", width=50)
+            tabelle.heading(spalte, text=spalte, anchor="w")
+            tabelle.column(spalte, width=(350 if spalte == "Grund" else 70), anchor="w")
+            #tabelle.column(spalte, width=50, anchor="w")
         # Daten einfügen
         for eintrag in daten:
             tabelle.insert("", tk.END, values=eintrag)
 
-        tabelle.pack(expand=False, fill="both")
+        tabelle.pack(expand=False, fill="none")
         return tabelle
 
     if person.name == None:
         messagebox.showwarning("Fehlende Eingabe", "Bitte wähle einen Namen aus und bestätige mit (Auswählen)")
         return
     clearwdw()
+    pic_logo4.pack()
     # Tabelle
     tk.Label(root, text=" ").pack()
     tabelle = tabelle_erzeugen(person.ereignisse)   
@@ -284,7 +287,7 @@ person = klassen.Person()
 # Erzeugung des Fensters
 root = tk.Tk()
 root.geometry("600x650")
-root.title("auraBook v1.1.0 - Lass es raus!")
+root.title("auraBook v1.1.1 - Lass es raus!")
 
 # Einstellung GUI
 root.tk.call("source", lnk_azure)
